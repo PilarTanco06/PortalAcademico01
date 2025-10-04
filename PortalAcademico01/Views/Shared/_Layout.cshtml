@@ -1,18 +1,73 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PortalAcademico01</title>
+    <title>@ViewData["Title"] - Portal Académico USMP</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PortalAcademico01.styles.css" asp-append-version="true" />
+    <style>
+        :root {
+            --usmp-red: #C41E3A;
+            --usmp-dark: #1a1a1a;
+        }
+
+        .navbar {
+            background-color: var(--usmp-red) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .btn-usmp {
+            background-color: var(--usmp-red);
+            border-color: var(--usmp-red);
+            color: white;
+        }
+
+        .btn-usmp:hover {
+            background-color: #a01729;
+            border-color: #a01729;
+            color: white;
+        }
+
+        .ultimo-curso-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: background-color 0.2s;
+        }
+
+        .ultimo-curso-badge:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        footer {
+            background-color: var(--usmp-dark);
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PortalAcademico01</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    🎓 Portal Académico USMP
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,15 +75,33 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Cursos" asp-action="Catalogo">Catálogo</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Cursos" asp-action="Catalogo">Catálogo</a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Matriculas" asp-action="MisCursos">Mis Cursos</a>
+                            </li>
+                        }
                     </ul>
+
+                    @* Mostrar último curso visitado desde la sesión *@
+                    @if (Context.Session.GetInt32("UltimoCursoId") != null)
+                    {
+                        var ultimoCursoId = Context.Session.GetInt32("UltimoCursoId");
+                        var ultimoCursoNombre = Context.Session.GetString("UltimoCursoNombre");
+                        
+                        <div class="me-3 d-none d-lg-block">
+                            <a asp-controller="Cursos" asp-action="Detalle" asp-route-id="@ultimoCursoId" 
+                               class="text-decoration-none text-white ultimo-curso-badge">
+                                📚 Volver a: @ultimoCursoNombre
+                            </a>
+                        </div>
+                    }
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -40,9 +113,10 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - PortalAcademico01 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted py-4">
+        <div class="container text-center">
+            <p>&copy; 2025 - Universidad de San Martín de Porres</p>
+            <p class="small">Portal Académico</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
