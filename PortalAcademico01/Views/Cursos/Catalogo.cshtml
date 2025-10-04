@@ -1,0 +1,97 @@
+@model IEnumerable<PortalAcademico01.Models.Curso>
+
+@{
+    ViewData["Title"] = "Catálogo de Cursos";
+}
+
+<div class="container my-5">
+    <h1 class="mb-4 text-center" style="color: #C41E3A;">Catálogo de Cursos USMP</h1>
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>⚠️ Error en los filtros:</strong> @ViewBag.Error
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+    <!-- Formulario de filtros -->
+    <div class="card mb-4 shadow-sm" style="border: 2px solid #C41E3A;">
+        <div class="card-header text-white" style="background-color: #C41E3A;">
+            <h5 class="mb-0">🔍 Filtros de Búsqueda</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="Catalogo">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Nombre o Código</label>
+                        <input type="text" class="form-control" name="nombre" value="@ViewBag.Nombre" placeholder="Buscar curso...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Créditos Mínimos</label>
+                        <input type="number" class="form-control" name="creditosMin" value="@ViewBag.CreditosMin" min="0">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Créditos Máximos</label>
+                        <input type="number" class="form-control" name="creditosMax" value="@ViewBag.CreditosMax" min="0">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Horario Inicio (desde)</label>
+                        <input type="time" class="form-control" name="horarioInicio" value="@ViewBag.HorarioInicio">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Horario Fin (hasta)</label>
+                        <input type="time" class="form-control" name="horarioFin" value="@ViewBag.HorarioFin">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn text-white px-4" style="background-color: #C41E3A;">
+                        Buscar Cursos
+                    </button>
+                    <a asp-action="Catalogo" class="btn btn-outline-secondary px-4">Limpiar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Listado de cursos -->
+    @if (ViewBag.MostrarMensajeInicial == true)
+    {
+        <div class="alert alert-info text-center">
+            <h5>👆 Utiliza los filtros para buscar cursos disponibles</h5>
+            <p class="mb-0">Puedes buscar por nombre, código, créditos u horarios.</p>
+        </div>
+    }
+    else if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var curso in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header text-white" style="background-color: #C41E3A;">
+                            <h5 class="mb-0">@curso.Codigo</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold">@curso.Nombre</h6>
+                            <p class="card-text">
+                                <strong>Créditos:</strong> @curso.Creditos<br>
+                                <strong>Horario:</strong> @curso.HorarioInicio.ToString(@"hh\:mm") - @curso.HorarioFin.ToString(@"hh\:mm")<br>
+                                <strong>Cupo Máximo:</strong> @curso.CupoMaximo
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <a asp-action="Detalle" asp-route-id="@curso.Id" class="btn text-white w-100" style="background-color: #C41E3A;">
+                                Ver Detalle
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <strong>No se encontraron cursos</strong> con los filtros seleccionados.
+        </div>
+    }
+</div>
