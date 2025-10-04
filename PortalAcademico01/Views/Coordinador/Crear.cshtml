@@ -1,0 +1,83 @@
+@model PortalAcademico01.Models.Curso
+
+@{
+    ViewData["Title"] = "Crear Curso";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header text-white" style="background-color: #C41E3A;">
+                    <h3 class="mb-0">Crear Nuevo Curso</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Crear" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Codigo" class="form-label fw-bold">Código del Curso</label>
+                                <input asp-for="Codigo" class="form-control" placeholder="Ej: MAT101" />
+                                <span asp-validation-for="Codigo" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Creditos" class="form-label fw-bold">Créditos</label>
+                                <input asp-for="Creditos" type="number" min="1" class="form-control" />
+                                <span asp-validation-for="Creditos" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label fw-bold">Nombre del Curso</label>
+                            <input asp-for="Nombre" class="form-control" placeholder="Ej: Matemáticas I" />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="CupoMaximo" class="form-label fw-bold">Cupo Máximo</label>
+                                <input asp-for="CupoMaximo" type="number" min="1" class="form-control" />
+                                <span asp-validation-for="CupoMaximo" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="HorarioInicio" class="form-label fw-bold">Horario Inicio</label>
+                                <input asp-for="HorarioInicio" type="time" class="form-control" />
+                                <span asp-validation-for="HorarioInicio" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="HorarioFin" class="form-label fw-bold">Horario Fin</label>
+                                <input asp-for="HorarioFin" type="time" class="form-control" />
+                                <span asp-validation-for="HorarioFin" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input asp-for="Activo" class="form-check-input" type="checkbox" checked />
+                                <label asp-for="Activo" class="form-check-label fw-bold">
+                                    Curso Activo
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn text-white btn-lg" style="background-color: #C41E3A;">
+                                Crear Curso
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,131 @@
+@model IEnumerable<PortalAcademico01.Models.Matricula>
+
+@{
+    ViewData["Title"] = "Gestión de Matrículas";
+    var curso = ViewBag.Curso as PortalAcademico01.Models.Curso;
+}
+
+<div class="container my-5">
+    <div class="mb-4">
+        <a asp-action="Index" class="btn btn-outline-secondary mb-3">
+            ← Volver al Panel
+        </a>
+        <div class="card shadow-sm">
+            <div class="card-body" style="background-color: #f8f9fa;">
+                <h2 style="color: #C41E3A;" class="mb-3">📋 @curso.Nombre</h2>
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Código:</strong> @curso.Codigo
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Créditos:</strong> @curso.Creditos
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Cupo:</strong> @curso.CupoMaximo
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Horario:</strong> @curso.HorarioInicio.ToString(@"hh\:mm") - @curso.HorarioFin.ToString(@"hh\:mm")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>✓</strong> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-header text-white" style="background-color: #C41E3A;">
+            <h5 class="mb-0">Lista de Matrículas (@Model.Count())</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Fecha de Registro</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var matricula in Model)
+                            {
+                                var estadoClase = matricula.Estado switch
+                                {
+                                    PortalAcademico01.Models.EstadoMatricula.Pendiente => "bg-warning text-dark",
+                                    PortalAcademico01.Models.EstadoMatricula.Confirmada => "bg-success",
+                                    PortalAcademico01.Models.EstadoMatricula.Cancelada => "bg-danger",
+                                    _ => "bg-secondary"
+                                };
+
+                                <tr>
+                                    <td><strong>#@matricula.Id</strong></td>
+                                    <td>@matricula.UsuarioId</td>
+                                    <td>@matricula.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        <span class="badge @estadoClase">
+                                            @matricula.Estado
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (matricula.Estado == PortalAcademico01.Models.EstadoMatricula.Pendiente)
+                                        {
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <form asp-action="CambiarEstadoMatricula" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@matricula.Id" />
+                                                    <input type="hidden" name="nuevoEstado" value="@PortalAcademico01.Models.EstadoMatricula.Confirmada" />
+                                                    <button type="submit" class="btn btn-success btn-sm" title="Confirmar">
+                                                        ✓ Confirmar
+                                                    </button>
+                                                </form>
+                                                <form asp-action="CambiarEstadoMatricula" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@matricula.Id" />
+                                                    <input type="hidden" name="nuevoEstado" value="@PortalAcademico01.Models.EstadoMatricula.Cancelada" />
+                                                    <button type="submit" class="btn btn-danger btn-sm" title="Cancelar"
+                                                            onclick="return confirm('¿Estás seguro de cancelar esta matrícula?')">
+                                                        ✗ Cancelar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        }
+                                        else if (matricula.Estado == PortalAcademico01.Models.EstadoMatricula.Confirmada)
+                                        {
+                                            <form asp-action="CambiarEstadoMatricula" method="post" class="d-inline">
+                                                <input type="hidden" name="id" value="@matricula.Id" />
+                                                <input type="hidden" name="nuevoEstado" value="@PortalAcademico01.Models.EstadoMatricula.Cancelada" />
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Cancelar"
+                                                        onclick="return confirm('¿Estás seguro de cancelar esta matrícula confirmada?')">
+                                                    ✗ Cancelar
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">Sin acciones</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="p-4 text-center text-muted">
+                    <p>No hay matrículas registradas para este curso.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
