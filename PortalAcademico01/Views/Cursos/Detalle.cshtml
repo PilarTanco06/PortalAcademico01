@@ -8,6 +8,23 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
+            <!-- Mensajes de feedback -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>✓</strong> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>✗</strong> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
             <div class="card shadow-lg">
                 <div class="card-header text-white py-3" style="background-color: #C41E3A;">
                     <h3 class="mb-0">@Model.Nombre</h3>
@@ -34,23 +51,39 @@
 
                     <hr>
 
-                    @if (cuposDisponibles > 0)
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <div class="alert alert-success">
-                            <strong>✓ ¡Hay cupos disponibles!</strong> Puedes inscribirte en este curso.
-                        </div>
-                        <a href="#" class="btn text-white btn-lg w-100 py-3" style="background-color: #C41E3A;">
-                            Inscribirse en este curso
-                        </a>
+                        @if (cuposDisponibles > 0)
+                        {
+                            <div class="alert alert-success">
+                                <strong>✓ ¡Hay cupos disponibles!</strong> Puedes inscribirte en este curso.
+                            </div>
+                            <form asp-controller="Matriculas" asp-action="Inscribirse" method="post">
+                                <input type="hidden" name="cursoId" value="@Model.Id" />
+                                <button type="submit" class="btn text-white btn-lg w-100 py-3" style="background-color: #C41E3A;">
+                                    Inscribirse en este curso
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">
+                                <strong>✗ Curso lleno.</strong> No hay cupos disponibles en este momento.
+                            </div>
+                            <button class="btn btn-secondary btn-lg w-100 py-3" disabled>
+                                No disponible
+                            </button>
+                        }
                     }
                     else
                     {
-                        <div class="alert alert-danger">
-                            <strong>✗ Curso lleno.</strong> No hay cupos disponibles en este momento.
+                        <div class="alert alert-warning">
+                            <strong>⚠</strong> Debes iniciar sesión para inscribirte en este curso.
                         </div>
-                        <button class="btn btn-secondary btn-lg w-100 py-3" disabled>
-                            No disponible
-                        </button>
+                        <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Detalle", "Cursos", new { id = Model.Id })" 
+                           class="btn text-white btn-lg w-100 py-3" style="background-color: #C41E3A;">
+                            Iniciar Sesión para Inscribirse
+                        </a>
                     }
 
                     <div class="mt-3">
