@@ -85,6 +85,15 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Matriculas" asp-action="MisCursos">Mis Cursos</a>
                             </li>
+                            
+                            @if (User.IsInRole("Coordinador"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light fw-bold" asp-area="" asp-controller="Coordinador" asp-action="Index">
+                                        🎓 Panel Coordinador
+                                    </a>
+                                </li>
+                            }
                         }
                     </ul>
 
@@ -116,7 +125,7 @@
     <footer class="border-top footer text-muted py-4">
         <div class="container text-center">
             <p>&copy; 2025 - Universidad de San Martín de Porres</p>
-            <p class="small">Portal Académico</p>
+            <p class="small">Portal Académico - Sistema de Gestión de Matrículas</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

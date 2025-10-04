@@ -1,0 +1,95 @@
+@model IEnumerable<PortalAcademico01.Models.Matricula>
+
+@{
+    ViewData["Title"] = "Mis Cursos";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 style="color: #C41E3A;">Mis Cursos Matriculados</h2>
+                <a asp-controller="Cursos" asp-action="Catalogo" class="btn text-white" style="background-color: #C41E3A;">
+                    Ver Catálogo
+                </a>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>✓</strong> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>✗</strong> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center py-5">
+                    <h4>No tienes cursos matriculados</h4>
+                    <p class="mb-3">Explora nuestro catálogo y comienza tu camino académico.</p>
+                    <a asp-controller="Cursos" asp-action="Catalogo" class="btn text-white" style="background-color: #C41E3A;">
+                        Ir al Catálogo
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var matricula in Model)
+                    {
+                        var estadoClase = matricula.Estado switch
+                        {
+                            PortalAcademico01.Models.EstadoMatricula.Pendiente => "bg-warning text-dark",
+                            PortalAcademico01.Models.EstadoMatricula.Confirmada => "bg-success",
+                            PortalAcademico01.Models.EstadoMatricula.Cancelada => "bg-danger",
+                            _ => "bg-secondary"
+                        };
+
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header text-white" style="background-color: #C41E3A;">
+                                    <h5 class="mb-0">@matricula.Curso?.Nombre</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-2">
+                                        <strong>Código:</strong> @matricula.Curso?.Codigo
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Créditos:</strong> @matricula.Curso?.Creditos
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Horario:</strong><br>
+                                        @matricula.Curso?.HorarioInicio.ToString(@"hh\:mm") - @matricula.Curso?.HorarioFin.ToString(@"hh\:mm")
+                                    </p>
+                                    <p class="mb-2">
+                                        <strong>Fecha de inscripción:</strong><br>
+                                        @matricula.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                    <div class="mt-3">
+                                        <span class="badge @estadoClase fs-6">
+                                            @matricula.Estado
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a asp-controller="Cursos" asp-action="Detalle" asp-route-id="@matricula.CursoId" 
+                                       class="btn btn-sm btn-outline-secondary w-100">
+                                        Ver Detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
