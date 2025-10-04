@@ -14,7 +14,8 @@
           "Microsoft.AspNetCore.Session": "2.3.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.9",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.9",
-          "Microsoft.Extensions.Caching.StackExchangeRedis": "9.0.9"
+          "Microsoft.Extensions.Caching.StackExchangeRedis": "9.0.9",
+          "StackExchange.Redis": "2.9.25"
         },
         "runtime": {
           "PortalAcademico01.dll": {}
@@ -562,7 +563,7 @@
           "Microsoft.Extensions.Caching.Abstractions": "9.0.9",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.9",
           "Microsoft.Extensions.Options": "9.0.9",
-          "StackExchange.Redis": "2.7.27"
+          "StackExchange.Redis": "2.9.25"
         },
         "runtime": {
           "lib/net8.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll": {
@@ -899,15 +900,15 @@
           }
         }
       },
-      "StackExchange.Redis/2.7.27": {
+      "StackExchange.Redis/2.9.25": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "9.0.9",
           "Pipelines.Sockets.Unofficial": "2.2.8"
         },
         "runtime": {
-          "lib/net6.0/StackExchange.Redis.dll": {
+          "lib/net8.0/StackExchange.Redis.dll": {
             "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.7.27.49176"
+            "fileVersion": "2.9.25.3041"
           }
         }
       },
@@ -1466,12 +1467,12 @@
       "path": "sqlitepclraw.provider.e_sqlite3/2.1.10",
       "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512"
     },
-    "StackExchange.Redis/2.7.27": {
+    "StackExchange.Redis/2.9.25": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Uqc2OQHglqj9/FfGQ6RkKFkZfHySfZlfmbCl+hc+u2I/IqunfelQ7QJi7ZhvAJxUtu80pildVX6NPLdDaUffOw==",
-      "path": "stackexchange.redis/2.7.27",
-      "hashPath": "stackexchange.redis.2.7.27.nupkg.sha512"
+      "sha512": "sha512-4lcZbdV/S/hzcWeLzfU3Sam7JyNChsizjbJBuYjcwHbpG1T+CGafuOjxem93DnfYfbyn/QbXVjHsGRMoi2hsqQ==",
+      "path": "stackexchange.redis/2.9.25",
+      "hashPath": "stackexchange.redis.2.9.25.nupkg.sha512"
     },
     "System.CodeDom/6.0.0": {
       "type": "package",

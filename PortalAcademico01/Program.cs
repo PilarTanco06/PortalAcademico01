@@ -17,6 +17,32 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Configurar Redis para Sesiones y Cache
+var redisConnection = builder.Configuration.GetConnectionString("Redis") 
+    ?? builder.Configuration["Redis:ConnectionString"] 
+    ?? "localhost:6379";
+
+// Session con Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnection;
+    options.InstanceName = "PortalAcademico_";
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Distributed Cache (Redis) para caché de datos
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnection;
+    options.InstanceName = "PortalAcademicoCache_";
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -44,7 +70,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+// Habilitar sesiones
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
